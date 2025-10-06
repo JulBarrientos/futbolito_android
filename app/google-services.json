@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "636526885635",
+    "firebase_url": "https://futbol-finder-76c49-default-rtdb.firebaseio.com",
+    "project_id": "futbol-finder-76c49",
+    "storage_bucket": "futbol-finder-76c49.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636526885635:android:62e3606daf23ad305a4736",
+        "android_client_info": {
+          "package_name": "com.jdb.futbolito"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-c-mrApSlPN5nF3vFfsO7EbaiiH19oyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
