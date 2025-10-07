@@ -20,50 +20,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.produceState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObjects
+import com.jdb.futbolito.app.viewmodel.HomeViewModel
 import com.jdb.futbolito.utils.Constants
 import com.jdb.futbolito.domain.model.Match
 
 @Composable
 fun HomeScreen(
-    matches: List<Match>,
+    viewModel: HomeViewModel,
     onMatchClick: (Match) -> Unit,
     onCreate: () -> Unit
 ) {
+    val matches by viewModel.matches.collectAsState()
 
-    val matchesState = produceState(initialValue = emptyList(), producer = {
-        val db = Firebase.firestore
-        db.collection("partidos")
-            // addSnapshotListener observa cambios en tiempo real.
-            // Si solo quieres cargar los datos una vez, usa .get().await()
-            .addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    // Manejar el error, por ejemplo, logueándolo.
-                    println("Listen failed: $e")
-                    return@addSnapshotListener
-                }
-
-                if (snapshot != null) {
-                    // Convierte los documentos a una lista de objetos Match
-                    // y actualiza el estado.
-                    value = snapshot.toObjects<Match>()
-                }
-            }
-
-        // Esta línea es necesaria para que la corrutina de produceState no termine inmediatamente.
-        // awaitClose se asegura de que el listener permanezca activo.
-        awaitDispose {
-            // Aquí puedes limpiar el listener si es necesario,
-            // aunque en este caso no es estrictamente requerido.
-        }
-    })
-
-    Scaffold (
+    Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = onCreate) {
                 Icon(Icons.Default.Add, contentDescription = Constants.CREATE_MATCH)
@@ -78,12 +51,12 @@ fun HomeScreen(
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)) {
+
             Text("Matches", style = MaterialTheme.typography.headlineMedium)
             Spacer(modifier = Modifier.height(8.dp))
 
-
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(matchesState.value) { match ->
+                items(matches) { match ->
                     Card(
                         onClick = { onMatchClick(match) },
                         modifier = Modifier.fillMaxWidth(),
@@ -96,8 +69,6 @@ fun HomeScreen(
                     }
                 }
             }
-
         }
     }
-
 }
